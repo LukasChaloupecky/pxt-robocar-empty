@@ -19,30 +19,25 @@ function motor_run(left: number = 0, right: number = 0, speed_factor: number = 8
     PCAmotor.MotorRun(PCAmotor.Motors.M4, Math.map(Math.constrain(-1 * right * (speedFactor / 100), -100, 100), -100, 100, -255, 255))
 }
 
+let okoli = 0
+let linie = 1
 basic.forever(function on_forever() {
     let l: any;
     let r: any;
     if (!autonomni) {
         l = (whiteline ^ pins.digitalReadPin(pin_L)) == 0 ? false : true
         r = (whiteline ^ pins.digitalReadPin(pin_R)) == 0 ? false : true
-        if (pins.digitalReadPin(DigitalPin.P1) == 0 && pins.digitalReadPin(DigitalPin.P13) == 0) {
-            motor_run(40, 40)
+        if (pins.digitalReadPin(DigitalPin.P1) == okoli && pins.digitalReadPin(DigitalPin.P13) == okoli) {
+            motor_run(50, 50)
+        } else if (pins.digitalReadPin(DigitalPin.P1) == okoli && pins.digitalReadPin(DigitalPin.P13) == linie) {
+            motor_run(-180, -51)
+        } else if (pins.digitalReadPin(DigitalPin.P1) == linie && pins.digitalReadPin(DigitalPin.P13) == okoli) {
+            motor_run(-51, -180)
+        } else if (pins.digitalReadPin(DigitalPin.P1) == linie && pins.digitalReadPin(DigitalPin.P13) == linie) {
+            motor_run(-181, -181)
         }
         
-        if (pins.digitalReadPin(DigitalPin.P1) == 0 && pins.digitalReadPin(DigitalPin.P13) == 1) {
-            motor_run(-80, -40)
-        }
-        
-        if (pins.digitalReadPin(DigitalPin.P1) == 1 && pins.digitalReadPin(DigitalPin.P13) == 0) {
-            motor_run(-40, -80)
-        }
-        
-        if (pins.digitalReadPin(DigitalPin.P1) == 1 && pins.digitalReadPin(DigitalPin.P13) == 1) {
-            motor_run(-150, -150)
-        }
-        
-        //  TO DO ...
-        basic.pause(50)
+        basic.pause(40)
     }
     
 })
@@ -58,7 +53,7 @@ radio.onReceivedNumber(function on_received_number(receivedNumber: number) {
     }
     
     if (receivedNumber == 0) {
-        motor_run(150, 150)
+        motor_run(80, 80)
     }
     
     if (receivedNumber == 1) {
@@ -66,11 +61,11 @@ radio.onReceivedNumber(function on_received_number(receivedNumber: number) {
     }
     
     if (receivedNumber == 2) {
-        motor_run(80, 40)
+        motor_run(-40, -80)
     }
     
     if (receivedNumber == 3) {
-        motor_run(40, 80)
+        motor_run(-80, -40)
     }
     
     basic.pause(50)
